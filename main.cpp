@@ -3,56 +3,53 @@
 #include "clusters.h"
 #include <fstream>
 #include <sstream>
+#include <string>
 #include <map>
 
-// add some data 6
+std::string datafile1 = "../Mall_Customers.csv";
+std::string datafile2 = "../marketing_campaign_processed.csv";
 
-using namespace std;
+std::string pointfile1 = "../points2.txt";
+std::string pointfile2 = "../points2.txt";
 
-string datafile1 = "../Mall_Customers.csv";
-string datafile2 = "../marketing_campaign_processed.csv";
+std::string clustersfile1 = "../clusters1.txt";
+std::string siluettesfile1 = "../siluettes1.txt";
 
-string pointfile1 = "../points1.txt";
-string pointfile2 = "../points2.txt";
-
-string clustersfile1 = "../clusters1.txt";
-string siluettesfile1 = "../siluettes1.txt";
-
-string clustersfile2 = "../clusters2.txt";
-string siluettesfile2 = "../siluettes2.txt";
+std::string clustersfile2 = "../clusters2.txt";
+std::string siluettesfile2 = "../siluettes2.txt";
 
 double EPS = 1e-6;
 
-void normalize_column(int ind, vector<point>& points)
+void normalize_column(int ind, std::vector<point>& points)
 {
 
   return ;
 }
 
 
-void readpoints(ifstream& in, vector<point>& points)
+void readpoints(std::ifstream& in, std::vector<point>& points)
 {
 
   return ;
 }
 
-void write_points(string outfilename, vector<point>& points)
+void write_points(std::string outfilename, std::vector<point>& points)
 {
 
 }
 
 
-void write_clusters(string outfilename, vector<point>& points)
+void write_clusters(std::string outfilename, std::vector<point>& points)
 {
 
 }
 
-void write_siluettes(string outfilename, vector<cluster>& clusters)
+void write_siluettes(std::string outfilename, std::vector<cluster>& clusters)
 {
 
 }
 
-void test(string input, string pointout, string clustout, string siluetteout)
+void test(std::string input, std::string pointout, std::string clustout, std::string siluetteout)
 {
 
   readpoints(in, points);
@@ -70,20 +67,20 @@ void test(string input, string pointout, string clustout, string siluetteout)
 
 
 
-void matrix_processing(string filename)
+void matrix_processing(std::string filename)
 {
-  ifstream in(filename);
-  ofstream out(filename.substr(0, filename.size()-4) + "_processed.csv");
+  std::ifstream in(filename);
+  std::ofstream out(filename.substr(0, filename.size()-4) + "_processed.csv");
 
-  string s;
+  std::string s;
   getline(in, s);
-  out << s << endl;
-  vector<vector<string> > M;
+  out << s << '\n';
+  std::vector<std::vector<std::string> > M;
 
   for(;getline(in, s) ;)
   {
-    stringstream ss(s);
-    string x;
+    std::stringstream ss(s);
+    std::string x;
     for(; ss >> x;)
     {
       if (x == "Graduation")
@@ -119,7 +116,7 @@ void matrix_processing(string filename)
       {
         out << "0 ";
       }
-      else if (x == "Absurd" or x == "YOLO")
+      else if (x == "Absurd" || x == "YOLO")
       {
         out << "5 ";
       }
@@ -146,7 +143,7 @@ void matrix_processing(string filename)
         out << x << " ";
       }
     }
-    out << endl;
+    out << '\n';
   }
   
   out.close();
