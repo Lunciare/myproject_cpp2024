@@ -1,109 +1,161 @@
-#include "bank_accounts.h"
+#include <cmath>
+#include <iostream>
+#include "clusters.h"
+#include <fstream>
+#include <sstream>
+#include <map>
 
+using namespace std;
 
-const std::string dataPath = "data/transactions_accounts.csv";
+string datafile1 = "../Mall_Customers.csv";
+string datafile2 = "../marketing_campaign_processed.csv";
 
-void test1()
+string pointfile1 = "../points1.txt";
+string pointfile2 = "../points2.txt";
+
+string clustersfile1 = "../clusters1.txt";
+string siluettesfile1 = "../siluettes1.txt";
+
+string clustersfile2 = "../clusters2.txt";
+string siluettesfile2 = "../siluettes2.txt";
+
+double EPS = 1e-6;
+
+void normalize_column(int ind, vector<point>& points)
 {
-    std::cout << "Test #1\n";
-    // here and below all uuids have been reduced to 8 symbols for code readability
-    // ad901393-93fd-45d8-9fed-aa590d055dd5 -> ad901393
-    Account person1("05c054e2", "Ivan");
-    Account person2("90599b00", "Anton", 1836992435);
 
-    person1.printInfo();
-    person2.printInfo();
-
-    std::cout << "Test #1 end!\n\n";
+  return ;
 }
 
-void test2()
+
+void readpoints(ifstream& in, vector<point>& points)
 {
-    std::cout << "Test #2\n";
 
-    Transaction trans1{"ad901393", 1710928800, "deposit", "", "05c054e2", 2024};
-    Transaction trans2{"afe700a5", 1710928801, "transfer", "05c054e2", "90599b00", 100};
-    Transaction trans3{"bfe700a5", 1710928801, "transfer", "05c054e2", "90599b00", 100};
-
-    std::cout << (trans1 < trans2) << (trans2 < trans3);
-
-    std::cout << "Test #2 end!\n\n";
+  return ;
 }
 
-void test3()
+void write_points(string outfilename, vector<point>& points)
 {
-    std::cout << "Test #3\n";
 
-    Account person("05c054e2", "Ivan");
-    person.addTransaction({"ad901393", 1710928800, "deposit", "", "05c054e2", 2024});
-    person.addTransaction({"afe700a5", 1710930600, "transfer", "05c054e2", "90599b00", 100});
-    person.addTransaction({"6ba3d9e4", 1710934200, "withdraw", "05c054e2", "", 63});
-    person.addTransaction({"afe700a5", 1710930600, "transfer", "05c054e2", "05c054e2", 100});
-
-    std::cout << (person.getBalance() == 1861 ? "ok!" : "not ok(") << '\n';
-    std::cout << "Test #3 end!\n\n";
 }
 
-void test4()
+
+void write_clusters(string outfilename, vector<point>& points)
 {
-    std::cout << "Test #4\n";
 
-    Account person("05c054e2", "Ivan");
-
-    Transaction trans1{"ad901393", 1710928800, "deposit", "", "05c054e2", 2024};
-    Transaction trans2{"afe700a5", 1710930600, "transfer", "05c054e2", "90599b00", 10.10};
-    Transaction trans3{"afe700a6", 1710930600, "transfer", "05c054e2", "90599b00", 256.512};
-    Transaction trans4{"afe700a7", 1710930600, "withdraw", "05c054e2", "", 3.1415};
-
-    person.addTransaction(trans1);
-    person.addTransaction(trans1);
-    person.addTransaction(trans2);
-    person.addTransaction(trans3);
-    person.addTransaction(trans4);
-
-    std::cout << (person.getTransactionsCount() == 3 ? "ok!" : "not ok(") << '\n';
-
-    std::cout << "Test #4 end!\n\n";
 }
 
-void test5()
+void write_siluettes(string outfilename, vector<cluster>& clusters)
 {
-    std::cout << "Test #5\n";
 
-    std::ifstream fileStream(dataPath);
-    if (!fileStream)
+}
+
+void test(string input, string pointout, string clustout, string siluetteout)
+{
+
+  readpoints(in, points);
+  //...
+  write_points(pointout, points);
+  
+  clusteringPAM(points);
+  write_clusters(clustout, points);
+  //...
+  interpreting(points, clusters);
+  write_siluettes(siluetteout, clusters);
+  
+  return;
+}
+
+
+
+void matrix_processing(string filename)
+{
+  ifstream in(filename);
+  ofstream out(filename.substr(0, filename.size()-4) + "_processed.csv");
+
+  string s;
+  getline(in, s);
+  out << s << endl;
+  vector<vector<string> > M;
+
+  for(;getline(in, s) ;)
+  {
+    stringstream ss(s);
+    string x;
+    for(; ss >> x;)
     {
-        std::cerr << "file not found\n";
+      if (x == "Graduation")
+      {
+        out << "2 ";
+      }
+      else if (x == "2n")
+      {
+        ss >> x;
+        out << "1 ";
+      }
+      else if (x == "Basic")
+      {
+        out << "0 ";
+      }
+      else if (x == "Master")
+      {
+        out << "3 ";
+      }
+      else if (x == "PhD")
+      {
+        out << "4 ";
+      }
+      else if (x == "Together")
+      {
+        out << "3 ";
+      }
+      else if (x == "Single")
+      {
+        out << "0 ";
+      }
+      else if (x == "Alone")
+      {
+        out << "0 ";
+      }
+      else if (x == "Absurd" or x == "YOLO")
+      {
+        out << "5 ";
+      }
+      else if (x == "Married")
+      {
+        out << "4 ";
+      }
+      else if (x == "Divorced")
+      {
+        out << "1 ";
+      }
+      else if (x == "Widow")
+      {
+        out << "2 ";
+      }
+      else if (x.size() == 10 && x[2] == '-')
+      {
+        //cout << x << endl;
+        int days = 10*(x[0] - '0') + (x[1] - '0') + 30*( 10*(x[3] - '0') + (x[4] - '0') ) + 365*( (x[6]-'0')*1000 + (x[7] - '0')*100 + (x[8] - '0')*10 + (x[9]-'0'));
+        out << days << " ";
+      }
+      else
+      {
+        out << x << " ";
+      }
     }
-
-    TransactionContainer transactions = readTransactions(fileStream);
-
-    std::cout << "Transaction list:\n";
-    for (const TransactionContainer::value_type& trans: transactions)
-        std::cout << trans.id << ' ' << trans.date << ' ' << trans.type << ' ' << trans.amount << '\n';
-
-
-    AccountContainer accounts = readAccounts(fileStream);
-    fillAccounts(accounts, transactions);
-
-    std::cout << "Account list:\n";
-    for (const AccountContainer::value_type& pair: accounts)
-        std::cout << pair.first << '\t' << pair.second.getBalance() << '\n';
-
-    std::cout << "Test #5 end!\n\n";
+    out << endl;
+  }
+  
+  out.close();
+  in.close();
 }
-
 
 int main()
 {
-    // uncomment test for task
-    test1();
-    // test2();
-    // test3();
-    // test4();
-    // test5();
-
-    return 0;
+  //matrix_processing("marketing_campaign.csv");
+  //test(datafile1, pointfile1, clustersfile1, siluettesfile1);
+  test(datafile2, pointfile2, clustersfile2, siluettesfile2);
+ 
+  return 0;
 }
-
-// minor changes
