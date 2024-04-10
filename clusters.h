@@ -4,8 +4,6 @@
 #include <map>
 #include <set>
 
-using namespace std;
-
 const int CLUST_NUM = 7;
 
 class point
@@ -24,13 +22,13 @@ struct cluster
 
 };
 
-double cost(vector<point>& points, vector<int>& m_ind, bool ischange = false)
+double cost(std::vector<point>& points, std::vector<int>& m_ind, bool ischange = false)
 {
 
 }
 
 
-void clusteringPAM(vector<point>& points)
+void clusteringPAM(std::vector<point>& points)
 {
   // generating CLUST_NUM random medoids
 
@@ -42,7 +40,7 @@ void clusteringPAM(vector<point>& points)
 }
 
 
-void interpreting(vector<point>& points, vector<cluster>& clusters)
+void interpreting(std::vector<point>& points, std::vector<cluster>& clusters)
 {
   
 }
